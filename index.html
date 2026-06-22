@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shoban Ahmad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --warp: #EDE9E1;
+    --ink: #1C1B19;
+    --thread: #B33A2E;
+    --graphite: #6B6862;
+    --grid: #D8D3C7;
+    --paper: #F6F3ED;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--warp);
+    color: var(--ink);
+    font-family: 'Source Serif 4', serif;
+    font-size: 17px;
+    line-height: 1.6;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Warp threads: vertical rules running the page, like loom warp */
+  .warp-field{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .warp-thread{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--grid);
+  }
+
+  .mono{
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .eyebrow{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--thread);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before{
+    content: '';
+    width: 18px;
+    height: 1px;
+    background: var(--thread);
+    display: inline-block;
+  }
+
+  a{ color: var(--ink); text-decoration: none; }
+
+  .wrap{
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Weft tick: horizontal crossing mark used as a divider */
+  .weft{
+    position: relative;
+    height: 1px;
+    background: var(--grid);
+    margin: 64px 0 0;
+  }
+  .weft::before, .weft::after{
+    content:'';
+    position:absolute;
+    top: -3px;
+    width: 1px;
+    height: 7px;
+    background: var(--graphite);
+  }
+  .weft::before{ left: 0; }
+  .weft::after{ left: 100%; }
+
+  header.hero{
+    padding: 96px 0 56px;
+  }
+
+  .hero .mono.tag{
+    font-size: 13px;
+    color: var(--graphite);
+    margin-bottom: 28px;
+    letter-spacing: 0.04em;
+  }
+
+  h1{
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    font-size: clamp(40px, 7vw, 58px);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+  }
+
+  h1 em{
+    font-style: italic;
+    color: var(--thread);
+    font-weight: 500;
+  }
+
+  .lede{
+    margin-top: 22px;
+    max-width: 540px;
+    font-size: 19px;
+    color: #3A3835;
+  }
+
+  .hero-links{
+    margin-top: 34px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .pill{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    padding: 9px 16px;
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    transition: background 0.15s ease, color 0.15s ease;
+    letter-spacing: 0.02em;
+  }
+  .pill:hover{
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .pill.accent{
+    background: var(--thread);
+    border-color: var(--thread);
+    color: var(--paper);
+  }
+  .pill.accent:hover{
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  section{
+    padding: 56px 0 0;
+  }
+
+  .section-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 30px;
+  }
+
+  .section-head h2{
+    font-size: 26px;
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  .count{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--graphite);
+  }
+
+  /* Education / experience entries */
+  .entry{
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 20px;
+    padding: 22px 0;
+    border-top: 1px solid var(--grid);
+  }
+  .entry:first-of-type{ border-top: none; }
+
+  .entry .when{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--graphite);
+    padding-top: 4px;
+  }
+
+  .entry h3{
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .entry .role{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--thread);
+    margin-top: 3px;
+    letter-spacing: 0.02em;
+  }
+  .entry p{
+    margin-top: 10px;
+    color: #3A3835;
+    font-size: 15.5px;
+  }
+
+  /* Projects: card-less list with hairline rules */
+  .project{
+    padding: 26px 0;
+    border-top: 1px solid var(--grid);
+  }
+  .project:first-of-type{ border-top: none; }
+
+  .project-top{
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: baseline;
+  }
+
+  .project h3{
+    font-size: 19px;
+    font-weight: 600;
+  }
+
+  .project .stamp{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--graphite);
+    white-space: nowrap;
+  }
+
+  .project p{
+    margin-top: 10px;
+    color: #3A3835;
+    font-size: 15.5px;
+    max-width: 620px;
+  }
+
+  .tags{
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tag{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 4px 9px;
+    background: var(--paper);
+    border: 1px solid var(--grid);
+    color: var(--graphite);
+    letter-spacing: 0.02em;
+  }
+
+  /* Skills */
+  .skillgrid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 40px;
+  }
+  .skillcol .label{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--thread);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .skillcol .items{
+    font-size: 15px;
+    color: #3A3835;
+    line-height: 1.7;
+  }
+
+  /* Footer */
+  footer{
+    margin-top: 80px;
+    padding: 40px 0 70px;
+    border-top: 1px solid var(--grid);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  footer .mono{
+    font-size: 12px;
+    color: var(--graphite);
+  }
+
+  @media (max-width: 600px){
+    .entry{ grid-template-columns: 1fr; gap: 6px; }
+    .skillgrid{ grid-template-columns: 1fr; }
+    .project-top{ flex-direction: column; align-items: flex-start; gap: 6px; }
+    header.hero{ padding: 64px 0 40px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="warp-field" id="warpField" aria-hidden="true"></div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="mono tag">SHOBAN AHMAD — NEW DELHI, INDIA</div>
+    <h1>Engineering at the<br><em>fiber level</em>,<br>thinking in systems.</h1>
+    <p class="lede">Final-year B.Tech in Textile &amp; Fibre Engineering at IIT Delhi, minoring in Computer Science. I build machine learning models for material science problems, retrieval systems, and trading-adjacent tools — and I like the seams where these fields meet.</p>
+    <div class="hero-links">
+      <a class="pill accent" href="assets/Shoban_Ahmad_CV.pdf" target="_blank" rel="noopener">Download CV ↓</a>
+      <a class="pill" href="https://in.linkedin.com/in/shoban-ahmad-102965333" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="pill" href="mailto:shobanahmad44@gmail.com">Email</a>
+    </div>
+  </header>
+
+  <div class="weft"></div>
+
+  <section id="education">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Education</div>
+        <h2>Indian Institute of Technology Delhi</h2>
+      </div>
+      <div class="count mono">2022 — 2026</div>
+    </div>
+
+    <div class="entry">
+      <div class="when">Nov 2022<br>– May 2026</div>
+      <div>
+        <h3>B.Tech, Textile &amp; Fibre Engineering</h3>
+        <div class="role">MINOR — COMPUTER SCIENCE</div>
+        <p>Bachelor's Technical Project on enhancing the filtration performance of non-woven materials using deep learning, supervised by Prof. Amit Rawal. Built an LSTM-based model with Bayesian hyperparameter optimization, five-fold cross-validation, and Kozeny-Carman physics-based synthetic data generation.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="weft"></div>
+
+  <section id="experience">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Experience</div>
+        <h2>Work</h2>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="when">May 2025</div>
+      <div>
+        <h3>Nomadiq Travel</h3>
+        <div class="role">ML INTERNSHIP</div>
+        <p>Assisted in building a flight ticket price prediction model using XGBoost, leveraging temporal, airline, and route-based features. Performed data preprocessing, feature engineering, and model tuning, then deployed the trained model for real-time price predictions on unseen routes and dates.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="weft"></div>
+
+  <section id="projects">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Selected work</div>
+        <h2>Projects</h2>
+      </div>
+      <div class="count mono">05</div>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
+        <h3>BTP — Filtration Performance Prediction</h3>
+        <div class="stamp">2025 — 2026</div>
+      </div>
+      <p>Deep learning model predicting filtration performance of non-woven materials. Combined an LSTM architecture with physics-grounded synthetic data (Kozeny-Carman equation) and Bayesian hyperparameter search, validated with five-fold cross-validation. Written up as a full IIT Delhi end-term report.</p>
+      <div class="tags">
+        <span class="tag">PyTorch</span>
+        <span class="tag">LSTM</span>
+        <span class="tag">Bayesian Optimization</span>
+        <span class="tag">Materials Science</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
+        <h3>Knowledge Graph RAG Q&amp;A Agent</h3>
+        <div class="stamp">2025</div>
+      </div>
+      <p>Graph-RAG system combining a Neo4j knowledge graph with vector retrieval for grounded question answering. Built entity–relation extraction and graph embeddings over Wikipedia articles, with an LLM agent that uses subgraph and text context to produce citation-backed answers.</p>
+      <div class="tags">
+        <span class="tag">Neo4j</span>
+        <span class="tag">RAG</span>
+        <span class="tag">LLM Agents</span>
+        <span class="tag">Embeddings</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
+        <h3>Boolean Retrieval Engine</h3>
+        <div class="stamp">Aug 2025</div>
+      </div>
+      <p>Boolean retrieval system on the CORD-19 dataset with a custom tokenizer and positional inverted index. Used gap encoding and variable-length compression to cut storage by 30% with lossless decompression, plus a tree-based query parser handling operator precedence.</p>
+      <div class="tags">
+        <span class="tag">Information Retrieval</span>
+        <span class="tag">Compression</span>
+        <span class="tag">Python</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
+        <h3>Stock Market Price Movement Prediction</h3>
+        <div class="stamp">Dec 2024</div>
+      </div>
+      <p>Machine learning model trained on historical Google stock price data, evaluated with MAE, RMSE, and R-squared to compare predictive performance across approaches.</p>
+      <div class="tags">
+        <span class="tag">Scikit-learn</span>
+        <span class="tag">Time Series</span>
+        <span class="tag">Finance</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-top">
+        <h3>Document Processing Tool</h3>
+        <div class="stamp">Feb 2024</div>
+      </div>
+      <p>Search engine matching input queries to corpus answers using the KMP pattern-matching algorithm, achieving O(m+n) time complexity for fast, accurate retrieval.</p>
+      <div class="tags">
+        <span class="tag">KMP Algorithm</span>
+        <span class="tag">Search</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="weft"></div>
+
+  <section id="skills">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Toolkit</div>
+        <h2>Skills</h2>
+      </div>
+    </div>
+
+    <div class="skillgrid">
+      <div class="skillcol">
+        <div class="label">Languages &amp; Libraries</div>
+        <div class="items">Python, C++, Java, NumPy, Pandas, Matplotlib, Scikit-learn, OpenCV, TensorFlow, Keras, PyTorch</div>
+      </div>
+      <div class="skillcol">
+        <div class="label">Tools</div>
+        <div class="items">Jupyter, GitHub, VS Code, AutoDesk</div>
+      </div>
+      <div class="skillcol">
+        <div class="label">Finance &amp; Data</div>
+        <div class="items">Financial data analysis, market research, business model evaluation, SQL, Excel</div>
+      </div>
+      <div class="skillcol">
+        <div class="label">Track record</div>
+        <div class="items">AIR 12,654 in JEE Advanced (1.2M candidates) · 99.16 percentile, JEE Main · Pupil, Codeforces · 83% score, AmplifyME Quant Trading Competition (Citadel Securities)</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="mono">© 2026 Shoban Ahmad</div>
+    <div class="mono">Built with thread, not templates.</div>
+  </footer>
+
+</div>
+
+<script>
+  // Generate warp threads programmatically across the viewport width
+  (function(){
+    var field = document.getElementById('warpField');
+    var spacing = 64;
+    var count = Math.ceil(window.innerWidth / spacing) + 1;
+    for (var i = 0; i < count; i++){
+      var t = document.createElement('div');
+      t.className = 'warp-thread';
+      t.style.left = (i * spacing) + 'px';
+      field.appendChild(t);
+    }
+  })();
+</script>
+
+</body>
+</html>
